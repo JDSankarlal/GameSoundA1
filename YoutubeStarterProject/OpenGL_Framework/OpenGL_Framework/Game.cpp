@@ -23,8 +23,13 @@ void Game::initializeGame()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
+	
+
+
 	headMesh.LoadFromFile("./Assets/Models/Monkey.obj");
 	audioMesh.LoadFromFile("./Assets/Models/Monkey.obj");
+
+	headMesh.addChild(&audioMesh);
 
 	if (!PassThrough.Load("./Assets/Shaders/Model.vert", "./Assets/Shaders/Model.frag"))
 	{
@@ -60,8 +65,10 @@ void Game::update()
 
 	float deltaTime = updateTimer->getElapsedTimeSeconds();
 	TotalGameTime += deltaTime;
-	//headTransform.RotateY(deltaTime*45.0f/2.0f);
+	audioMesh.setPosition(vec3(3.0f, 0.0f, 3.0f)*vec3(cos(TotalGameTime),1,sin(TotalGameTime)));
+	//audioTransform.Translate(vec3(0.f+deltaTime,0.f,0.f));
 	//...
+	headMesh.update(deltaTime);
 	postProcessing();
 }
 
@@ -79,7 +86,7 @@ void Game::postProcessing()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	PassThrough.Bind();
-	PassThrough.SendUniformMat4("uModel", headTransform.data, true);
+	PassThrough.SendUniformMat4("uModel", headMesh.getLocalToWorldMatrix().data, true);
 	PassThrough.SendUniformMat4("uView", CameraTransform.GetInverse().data, true);
 	PassThrough.SendUniformMat4("uProj", CameraProjection.data, true);
 	PassThrough.SendUniform("u_time", TotalGameTime);
@@ -90,7 +97,7 @@ void Game::postProcessing()
 
 
 	PassThrough2.Bind();
-	PassThrough2.SendUniformMat4("uModel", audioTransform.data, true);
+	PassThrough2.SendUniformMat4("uModel", audioMesh.getLocalToWorldMatrix().data, true);
 	PassThrough2.SendUniformMat4("uView", CameraTransform.GetInverse().data, true);
 	PassThrough2.SendUniformMat4("uProj", CameraProjection.data, true);
 	PassThrough2.SendUniform("u_time", TotalGameTime);

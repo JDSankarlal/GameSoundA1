@@ -7,6 +7,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include "Timer.h"
+#include "Transform.h"
 
 #define WINDOW_WIDTH			800
 #define WINDOW_HEIGHT			600
