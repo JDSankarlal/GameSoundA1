@@ -24,7 +24,7 @@ void Game::initializeGame()
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 	headMesh.LoadFromFile("./Assets/Models/Monkey.obj");
-	//audioMesh.LoadFromFile("./Asssets/Models/Sphere.obj");
+	audioMesh.LoadFromFile("./Assets/Models/Monkey.obj");
 
 	if (!PassThrough.Load("./Assets/Shaders/Model.vert", "./Assets/Shaders/Model.frag"))
 	{
@@ -32,14 +32,24 @@ void Game::initializeGame()
 		system("pause");
 		exit(0);
 	}
+
+
+	if (!PassThrough2.Load("./Assets/Shaders/Model2.vert", "./Assets/Shaders/Model2.frag"))
+	{
+		std::cout << "Shaders failed to initialize. \n" << std::endl;
+		system("pause");
+		exit(0);
+	}
+
 	
 	headTransform.RotateY(45);
+	audioTransform.Scale(.5f);
+	audioTransform.Translate(vec3(0.0f,3.0f,0.0f));
 	CameraTransform.RotateX(-45.0f);
 	CameraTransform.RotateY(45.0f);
 	//CameraTransform.RotateZ(45.0f);
 	CameraTransform.Translate(vec3(5.0f,6.0f,5.0f));
 	CameraProjection = mat4::PerspectiveProjection(60.0f,(float)WINDOW_WIDTH/(float)WINDOW_HEIGHT,1.0f, 10000.0f);
-
 	//...
 }
 
@@ -50,7 +60,7 @@ void Game::update()
 
 	float deltaTime = updateTimer->getElapsedTimeSeconds();
 	TotalGameTime += deltaTime;
-	//planeTransform.RotateY(deltaTime*45.0f/2.0f);
+	//headTransform.RotateY(deltaTime*45.0f/2.0f);
 	//...
 	postProcessing();
 }
@@ -79,13 +89,15 @@ void Game::postProcessing()
 	PassThrough.UnBind();
 
 
-	/*PassThrough.Bind();
-	PassThrough.SendUniformMat4("uModel", audioTransform.data, true);
-	PassThrough.SendUniformMat4("uView", CameraTransform.GetInverse().data, true);
-	PassThrough.SendUniformMat4("uProj", CameraProjection.data, true);
-	PassThrough.SendUniform("u_time", TotalGameTime);
-	draw(&audioMesh);*/
+	PassThrough2.Bind();
+	PassThrough2.SendUniformMat4("uModel", audioTransform.data, true);
+	PassThrough2.SendUniformMat4("uView", CameraTransform.GetInverse().data, true);
+	PassThrough2.SendUniformMat4("uProj", CameraProjection.data, true);
+	PassThrough2.SendUniform("u_time", TotalGameTime);
+	
+	draw(&audioMesh);
 
+	PassThrough2.UnBind();
 	glutSwapBuffers();
 
 }

@@ -33,6 +33,7 @@ public:
 	Mesh headMesh;
 	Mesh audioMesh;
 	ShaderProgram PassThrough;
+	ShaderProgram PassThrough2;
 	mat4 CameraTransform;
 	mat4 CameraProjection;
 	mat4 headTransform;
