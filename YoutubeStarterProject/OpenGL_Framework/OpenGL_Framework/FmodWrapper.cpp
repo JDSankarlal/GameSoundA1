@@ -107,14 +107,16 @@ FMOD::Channel * Sound::Play(bool loop)
 	FmodErrorCheck(result);
 	result = channel->setPaused(false);
 	FmodErrorCheck(result);
-	return channel;
 
 	if (loop)
 	{
 		channel->setMode(FMOD_LOOP_NORMAL);
+		channel->setLoopCount(-1);
 	}
 
 	else { channel->setMode(FMOD_LOOP_OFF); }
+	
+	return channel;
 }
 
 void Sound::SetPosition(FMOD::Channel * thisChannel, FMOD_VECTOR newPos, FMOD_VECTOR newVec)

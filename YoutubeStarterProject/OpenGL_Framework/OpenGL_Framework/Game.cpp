@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "FmodWrapper.h"
 Game::Game()
 {
 }
@@ -23,9 +23,9 @@ void Game::initializeGame()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-	
-
-
+	drum.Load("media/Home.mp3");
+	drumChannel = drum.Play(true);
+		
 	headMesh.LoadFromFile("./Assets/Models/Monkey.obj");
 	audioMesh.LoadFromFile("./Assets/Models/Monkey.obj");
 
@@ -47,7 +47,7 @@ void Game::initializeGame()
 	}
 
 	
-	headTransform.RotateY(45);
+	headMesh.setRotationAngleY(45.f);
 	audioTransform.Scale(.5f);
 	audioTransform.Translate(vec3(0.0f,3.0f,0.0f));
 	CameraTransform.RotateX(-45.0f);
@@ -65,10 +65,15 @@ void Game::update()
 
 	float deltaTime = updateTimer->getElapsedTimeSeconds();
 	TotalGameTime += deltaTime;
-	audioMesh.setPosition(vec3(3.0f, 0.0f, 3.0f)*vec3(cos(TotalGameTime),1,sin(TotalGameTime)));
+	audioMesh.setPosition(vec3(3.0f, 3.0f, 3.0f)*vec3(cos(TotalGameTime),1,sin(TotalGameTime)));
+	soundPos = { audioMesh.getPosition().x, audioMesh.getPosition().y, audioMesh.getPosition().z -5 };
 	//audioTransform.Translate(vec3(0.f+deltaTime,0.f,0.f));
 	//...
+
 	headMesh.update(deltaTime);
+	drum.SetPosition(drumChannel, soundPos);
+	drum.engine.Update();
+	
 	postProcessing();
 }
 
