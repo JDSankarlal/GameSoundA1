@@ -17,6 +17,9 @@ Game::~Game()
 
 void Game::initializeGame()
 {
+	std::cout << "Enter the name of the song file you are trying to play. Available choices : " << std::endl;
+	std::cout << "Home.mp3, drumloop.wav, wave.mp3, jaguar.wav, singing.wav" << std::endl;
+	std::cin >> soundChoice; 
 	frozenTime = TotalGameTime;
 	audioMesh.setPosition(vec3(0.0f, 0.0f, 3.0f));
 	frozenPos = audioMesh.getPosition();
@@ -29,9 +32,6 @@ void Game::initializeGame()
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	std::cout << "Enter the name of the song file you are trying to play. Available choices : " << std::endl;
-	std::cout << "Home.mp3, drumloop.wav, wave.mp3, jaguar.wav, singing.wav" << std::endl;
-	std::cin >> soundChoice; 
 	drum.Load((std::string("media/") + soundChoice).c_str());
 	drumChannel = drum.Play(true);
 		
