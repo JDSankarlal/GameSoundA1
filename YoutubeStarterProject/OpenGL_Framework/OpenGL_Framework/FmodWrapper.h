@@ -5,7 +5,8 @@ Copyright (c), Firelight Technologies Pty, Ltd 2004-2018.
 This example shows how to basic 3D positioning of sounds.
 
 Brent Cowan. Jan 21 2019
-Josh Sankarlal Jan. 21 2019
+Josh Sankarlal Feb. 5 2019
+		- Added functions to change mode
 ==============================================================================*/
 #pragma once
 #pragma comment (lib, "FMOD/lib/fmod_vc.lib")
@@ -51,7 +52,7 @@ public:
 	FMOD::Channel   *Play(bool loop); //Channel is audio being played. One sound many channels can play it. 
 	static void SetPosition(FMOD::Channel* thisChannel, FMOD_VECTOR newPos, FMOD_VECTOR newVec = { 0.0f,0.0f,0.0f });
 	FMOD::Sound     *sound; //Sound is the file
-
+	FMOD::Channel *setModeLinear(bool mode);
 	FMOD_VECTOR pos = { 0.0f, 0.0f, 0.0f };
 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 

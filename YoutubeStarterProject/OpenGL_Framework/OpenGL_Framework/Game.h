@@ -43,6 +43,7 @@ public:
 	mat4 CameraProjection;
 	mat4 headTransform;
 	mat4 audioTransform;
+	bool isLinear;
 
 private:
 

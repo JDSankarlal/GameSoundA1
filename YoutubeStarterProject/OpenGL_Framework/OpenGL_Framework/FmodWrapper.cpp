@@ -119,6 +119,23 @@ FMOD::Channel * Sound::Play(bool loop)
 	return channel;
 }
 
+FMOD::Channel * Sound::setModeLinear(bool mode)
+{
+	if (mode)
+	{
+		channel->setMode(FMOD_3D_LINEARROLLOFF);
+	}
+
+	else
+	{
+		channel->setMode(FMOD_3D_INVERSEROLLOFF);
+	}
+
+	std::cout << "is Linear: " << mode << std::endl;
+
+	return channel;
+}
+
 void Sound::SetPosition(FMOD::Channel * thisChannel, FMOD_VECTOR newPos, FMOD_VECTOR newVec)
 {
 

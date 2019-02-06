@@ -17,6 +17,8 @@ Game::~Game()
 
 void Game::initializeGame()
 {
+	isLinear = false;
+	drum.setModeLinear(isLinear); //Sets the current rolloff to logarithmic 
 	updateTimer = new Timer();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
@@ -74,6 +76,8 @@ void Game::update()
 	drum.SetPosition(drumChannel, soundPos);
 	drum.engine.Update();
 	
+
+
 	postProcessing();
 }
 
@@ -135,6 +139,19 @@ void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 	case 'q': // the 'q' key
 		exit(1);
 		break;
+	case 'r':
+		if (!isLinear)
+		{
+			isLinear = true; //if not linear, set to linear
+			drum.setModeLinear(isLinear); //Sets mode to linear rolloff
+		}
+
+		else
+		{
+			isLinear = false; //if  linear, set to logarithmic
+			drum.setModeLinear(isLinear); // 
+		}
+
 	}
 }
 
