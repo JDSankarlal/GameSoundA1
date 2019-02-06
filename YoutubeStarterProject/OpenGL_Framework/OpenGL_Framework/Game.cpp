@@ -17,16 +17,22 @@ Game::~Game()
 
 void Game::initializeGame()
 {
+	frozenTime = TotalGameTime;
+	audioMesh.setPosition(vec3(0.0f, 0.0f, 3.0f));
+	frozenPos = audioMesh.getPosition();
+	soundPos = { audioMesh.getPosition().x, audioMesh.getPosition().y, audioMesh.getPosition().z };
 	isLinear = false;
-	isBopping = false;
+	isBopping = true;
 	drum.setModeLinear(isLinear); //Sets the current rolloff to logarithmic 
 	updateTimer = new Timer();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
-	drum.Load("media/Home.mp3");
+	std::cout << "Enter the name of the song file you are trying to play. Available choices : " << std::endl;
+	std::cout << "Home.mp3, drumloop.wav, wave.mp3, jaguar.wav, singing.wav" << std::endl;
+	std::cin >> soundChoice; 
+	drum.Load((std::string("media/") + soundChoice).c_str());
 	drumChannel = drum.Play(true);
 		
 	headMesh.LoadFromFile("./Assets/Models/Monkey.obj");
@@ -51,8 +57,9 @@ void Game::initializeGame()
 
 	
 	headMesh.setRotationAngleY(45.f);
-	audioTransform.Scale(.5f);
-	audioTransform.Translate(vec3(0.0f,3.0f,0.0f));
+	audioMesh.setScale(0.5);
+	//audioTransform.Scale(.05f);
+	//audioTransform.Translate(vec3(0.0f,3.0f,0.0f));
 	CameraTransform.RotateX(-45.0f);
 	CameraTransform.RotateY(45.0f);
 	//CameraTransform.RotateZ(45.0f);
@@ -68,21 +75,34 @@ void Game::update()
 
 	float deltaTime = updateTimer->getElapsedTimeSeconds();
 	TotalGameTime += deltaTime;
-	audioMesh.setPosition(vec3(3.0f, 3.0f, 3.0f)*vec3(cos(TotalGameTime),1,sin(TotalGameTime)));
-	soundPos = { audioMesh.getPosition().x, audioMesh.getPosition().y, audioMesh.getPosition().z -5 };
+	
+	
 	//audioTransform.Translate(vec3(0.f+deltaTime,0.f,0.f));
 	//...
-
+	
 	if (isBopping)
 	{
 		
+		audioMesh.setPosition(vec3(3.0f, 1.0f, 3.0f)*vec3(cos(TotalGameTime),1,sin(TotalGameTime)));
+		soundPos = { audioMesh.getPosition().x, audioMesh.getPosition().y, audioMesh.getPosition().z};
 		headMesh.update(deltaTime);
 		drum.SetPosition(drumChannel, soundPos);
+		
 	}
+
+	if (isDancin)
+	{
+		isBopping = false;
+		audioMesh.setPosition(frozenPos);
+		audioMesh.setPosition(vec3(0.0,0.0,(15 * (sin(TotalGameTime)))));
+		soundPos = { audioMesh.getPosition().x, audioMesh.getPosition().y, audioMesh.getPosition().z};
+		headMesh.update(frozenTime);
+		drum.SetPosition(drumChannel, soundPos);
+		
+	}
+
 	drum.engine.Update();
 	
-
-
 	postProcessing();
 }
 
@@ -138,8 +158,6 @@ void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 {
 	switch(key)
 	{
-	case 32: // the space bar
-		break;
 	case 27: // the escape key
 	case 'q': // the 'q' key
 		exit(1);
@@ -156,6 +174,8 @@ void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 			isLinear = false; //if  linear, set to logarithmic
 			drum.setModeLinear(isLinear); // 
 		}
+		break;
+
 	case 'p':
 		if (!isBopping) // If the audio source is not moving
 			isBopping = true;
@@ -163,7 +183,11 @@ void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 		{
 			isBopping = false;
 		}
+		break;
 
+	case 'd':
+		isDancin = true;
+		break;
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "Timer.h"
 #include "Transform.h"
 #include "FmodWrapper.h"
+#include <string>
 
 #define WINDOW_WIDTH			800
 #define WINDOW_HEIGHT			600
@@ -43,9 +44,13 @@ public:
 	mat4 CameraProjection;
 	mat4 headTransform;
 	mat4 audioTransform;
+	std::string soundChoice;
 	bool isLinear;
 	bool isBopping;
+	bool isDancin;
+	vec3 frozenPos;
 	int deltaAtPause;
+	float frozenTime;
 
 private:
 
