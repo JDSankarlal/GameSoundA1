@@ -44,6 +44,8 @@ public:
 	mat4 headTransform;
 	mat4 audioTransform;
 	bool isLinear;
+	bool isBopping;
+	int deltaAtPause;
 
 private:
 

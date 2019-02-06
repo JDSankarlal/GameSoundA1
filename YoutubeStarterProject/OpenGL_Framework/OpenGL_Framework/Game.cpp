@@ -18,6 +18,7 @@ Game::~Game()
 void Game::initializeGame()
 {
 	isLinear = false;
+	isBopping = false;
 	drum.setModeLinear(isLinear); //Sets the current rolloff to logarithmic 
 	updateTimer = new Timer();
 	glEnable(GL_DEPTH_TEST);
@@ -72,8 +73,12 @@ void Game::update()
 	//audioTransform.Translate(vec3(0.f+deltaTime,0.f,0.f));
 	//...
 
-	headMesh.update(deltaTime);
-	drum.SetPosition(drumChannel, soundPos);
+	if (isBopping)
+	{
+		
+		headMesh.update(deltaTime);
+		drum.SetPosition(drumChannel, soundPos);
+	}
 	drum.engine.Update();
 	
 
@@ -150,6 +155,13 @@ void Game::keyboardUp(unsigned char key, int mouseX, int mouseY)
 		{
 			isLinear = false; //if  linear, set to logarithmic
 			drum.setModeLinear(isLinear); // 
+		}
+	case 'p':
+		if (!isBopping) // If the audio source is not moving
+			isBopping = true;
+		else
+		{
+			isBopping = false;
 		}
 
 	}
